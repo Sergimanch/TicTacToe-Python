@@ -46,24 +46,51 @@ def turnoMaquina(ficha):
         columna = random.randint(0,2)
     tablero[fila][columna]=ficha
     
-def ganar():
-    for i in range(len(tablero)):
-        if tablero[i][0] == tablero[i][1] == tablero[i][2] != " ":
-            return tablero[i][0]
-        if tablero[0][i] == tablero[1][i] == tablero[2][i] != " ":
-            return tablero[0][i]
-    if tablero[0][0] == tablero[1][1] == tablero[2][2] != " ":
-        return tablero[0][0]
-    if tablero[0][2] == tablero[1][1] == tablero[2][0] != " ":
-        return tablero[0][2]
-    for j in tablero:
-        for h in j:
-            if h != " ":
-                return "Empate"
-
-def jugadorVSjugador():
-    turnoJugador()
+                    
     
+
+
+def comprobarGanador():
+    ganador = None
+    while ganador is None:
+        for i in range(len(tablero)):
+            if tablero[i][0] == tablero[i][1] == tablero[i][2] != " ":
+                ganador = tablero[i][0] 
+                return ganador
+            if tablero[0][i] == tablero[1][i] == tablero[2][i] != " ":
+                ganador = tablero[0][i]
+                return ganador
+        if tablero[0][0] == tablero[1][1] == tablero[2][2] != " ":
+            ganador = tablero[0][0]
+            return ganador
+        if tablero[0][2] == tablero[1][1] == tablero[2][0] != " ":
+            ganador = tablero[0][2]
+            return ganador
+
+def comprobarEmpate():
+    for i in tablero:
+        for j in i:
+            if j == " ":
+                return False
+    return True
+
+            
+def jugadorVSjugador():
+    ganador = None
+    while ganador is None:
+        imprimir(tablero)
+        turno_actual="X"
+        turnoJugador(turno_actual)
+        if turno_actual == "X":
+            turno_actual = "O"
+        else:
+            turno_actual = "X"
+        ganador = comprobarGanador()
+    imprimir(tablero)
+    if ganador:
+        print(f"¡Ha ganado el jugador '{ganador}'!")
+    elif comprobarEmpate():
+        print("Tablero lleno ¡Ha habido un Empate!")
 
 def jugadorVSmaquina():
     # Decidir quién empieza
@@ -79,34 +106,32 @@ def jugadorVSmaquina():
         imprimir(tablero)
         
         # Determinar a quién le toca mover en este turno
-        if (quien_empieza == "J" and turno_actual == "X") \
-           (quien_empieza == "M" and turno_actual == "O"):
+        if (quien_empieza == "J" and turno_actual == "X") | (quien_empieza == "M" and turno_actual == "O"):
             # Turno del jugador
             turnoJugador(turno_actual)
         else:
             # Turno de la máquina
             turnoMaquina(turno_actual)
-        
+    
         # Comprobar el estado del juego
-        ganador = ganar()
-
+        ganador = comprobarGanador()
+        if ganador:
+            print(f"¡Ha ganado el jugador '{ganador}'!")
+        elif comprobarEmpate():
+            print("Tablero lleno ¡Ha habido un Empate!")
         # Cambiar de ficha para el siguiente turno
         if turno_actual == "X":
             turno_actual = "O"
         else:
             turno_actual = "X"
-
     # Mostrar el resultado final
     imprimir(tablero)
-    if ganador == "Empate":
-        print("¡El juego ha terminado en empate!")
-    else:
-        print(f"¡Ha ganado el jugador '{ganador}'!")
 
 
         
 
 def maquinaVSmaquina():
+    i =0
 
 #A mejorar, hacer funciones que se puedan usar directamente en el menú, sin que haya logica(jugadorVSjugador, jugaadorVSmaquina y maquinaVSmaquina)
 #Crear funcion que te permita jugar otra partida
