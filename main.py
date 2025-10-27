@@ -2,10 +2,11 @@ import funciones
 
 match funciones.menu():
     case 1:
-        print("Jugador ⚔️ Jugador")
+        print("Jugador ⚔️  Jugador")
         funciones.jugadorVSjugador()
     case 2:
-        print("Jugador ⚔️ Máquina")
+        print("Jugador ⚔️  Máquina")
         funciones.jugadorVSmaquina()
     case 3:
-        print("Máquina ⚔️ Máquina")
+        print("Máquina ⚔️  Máquina")
+        funciones.maquinaVSmaquina()
