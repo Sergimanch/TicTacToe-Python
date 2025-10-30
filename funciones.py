@@ -130,7 +130,6 @@ def jugadorVSmaquina():
         else:
             turno_actual = "X"
         
-
 def maquinaVSmaquina():
     reiniciar_tablero()
     turno_actual = "X"
@@ -153,7 +152,4 @@ def maquinaVSmaquina():
         else:
             turno_actual = "X"
 
-
-#A mejorar, hacer funciones que se puedan usar directamente en el menú, sin que haya logica(jugadorVSjugador, jugaadorVSmaquina y maquinaVSmaquina)
 #Crear funcion que te permita jugar otra partida
-# Separar la logica de las funciones turnoMAquina y turnoJugador y juntar ganarYtablero lleno, para que este solo en ganar
