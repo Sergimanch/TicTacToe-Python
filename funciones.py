@@ -1,4 +1,16 @@
 import random
+
+def cara_cruz():
+    arr = ["cara", "cruz"]
+    choice = random.choice(arr)
+    return choice
+
+def presentacion():
+    jugador = input("Introduce tu nombre: ")
+    edad = int(input("Introduce tu edad: "))
+    ficha = input("Introduce una ficha para jugar: ")
+    print(f"Hola, {jugador}, ({edad}). Juegas con la ficha: {ficha})")
+    return ficha
 def menu():
     # Muestra el menú de opciones y devuelve la selección del usuario
     print("\n--- Tres en Raya ---")
@@ -8,8 +20,11 @@ def menu():
     opcion = int(input("Elige el modo de juego(1, 2 o 3) "))
     return opcion
 
-# Tamaño del tablero (puedes pedirlo por input si quieres)
-N = 3
+
+def dimensiones():
+    num = int(input("Introduce las dimensiones del tablero "))
+    return num
+N = dimensiones()
 
 # Inicializa el tablero vacío como una matriz NxN con espacios en blanco
 tablero = [[" " for _ in range(N)] for _ in range(N)]
@@ -84,9 +99,17 @@ def comprobarEmpate():
     return True
 
 def jugadorVSjugador():
+    j1 = presentacion()
+    j2 = presentacion()
     # Controla el modo de juego jugador contra jugador
     reiniciar_tablero()
-    turno_actual = "X"
+    turno = cara_cruz()
+    if turno == "cara":
+        turno_actual = j2
+        print(f"Ha salido cara empiezan {j1}")
+    else:
+        turno_actual = j1
+        print(f"Ha salido cruz empiezan {j2}")
     
     while True:
         imprimir(tablero)
@@ -104,19 +127,23 @@ def jugadorVSjugador():
             break
 
         # Alterna turnos entre X y O
-        if turno_actual == "X":
-            turno_actual = "O"
+        if turno_actual == j1:
+            turno_actual = j2
         else:
-            turno_actual = "X"
+            turno_actual = j1
 
 def jugadorVSmaquina():
     # Controla el juego jugador contra máquina, pregunta quién empieza
     reiniciar_tablero()
-    quien_empieza = ""
-    while quien_empieza not in ["J", "M"]:
-        quien_empieza = input("¿Quién empieza? (J para jugador / M para máquina): ").upper()
-
-    turno_actual = "X"
+    turno = cara_cruz()
+    if turno == "Cara":
+        turno_actual = "O"
+        quien_empieza = "J"
+        print("Ha salido cara empiezan O")
+    else:
+        turno_actual = "X"
+        print("Ha salido cruz empiezan X")
+        quien_empieza =="M"
     while True:
         imprimir(tablero)
         
@@ -147,7 +174,13 @@ def jugadorVSmaquina():
 def maquinaVSmaquina():
     # Controla el juego máquina contra máquina, movimientos aleatorios de ambos
     reiniciar_tablero()
-    turno_actual = "X"
+    turno = cara_cruz()
+    if turno == "Cara":
+        turno_actual = "O"
+        print("Ha salido cara empiezan O")
+    else:
+        turno_actual = "X"
+        print("Ha salido cruz empiezan X")
     while True:
         imprimir(tablero)
         ganador = comprobarGanador()
@@ -166,4 +199,3 @@ def maquinaVSmaquina():
             turno_actual = "O"
         else:
             turno_actual = "X"
-
