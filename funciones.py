@@ -1,13 +1,4 @@
 import random
-
-# Inicializa el tablero vacío como una matriz 3x3 con espacios en blanco
-tablero = [[" ", " ", " "], [" ", " ", " "], [" ", " ", " "]]
-
-def reiniciar_tablero():
-    # Restablece el tablero a su estado inicial vacío
-    global tablero
-    tablero = [[" ", " ", " "], [" ", " ", " "], [" ", " ", " "]]
-
 def menu():
     # Muestra el menú de opciones y devuelve la selección del usuario
     print("\n--- Tres en Raya ---")
@@ -17,26 +8,35 @@ def menu():
     opcion = int(input("Elige el modo de juego(1, 2 o 3) "))
     return opcion
 
+# Tamaño del tablero (puedes pedirlo por input si quieres)
+N = 3
+
+# Inicializa el tablero vacío como una matriz NxN con espacios en blanco
+tablero = [[" " for _ in range(N)] for _ in range(N)]
+
+def reiniciar_tablero():
+    global tablero
+    tablero = [[" " for _ in range(N)] for _ in range(N)]
+
 def imprimir(tab):
-    # Imprime el tablero actual con numeración para filas y columnas
-    print("  1   2   3")
-    for i in range(1, len(tab)+1):
-        print(i, end=" ")
-        print(f" | ".join(tab[i-1]))
-        if i < 3:
-            print("  ----------")
+    # Imprime encabezado de columnas
+    print("   " + "   ".join(str(i+1) for i in range(len(tab))))
+    for i in range(len(tab)):
+        print(i+1, end="  ")
+        print(" | ".join(tab[i]))
+        if i < len(tab) - 1:
+            print("   " + "-" * (4 * len(tab) - 3))
 
 def turnoJugador(ficha):
-    # Permite al jugador introducir su movimiento válido en el tablero
     condicion = True
     while condicion:
-        columna = int(input("Introduce la columna (1-3): "))
-        fila = int(input("Introduce la fila (1-3): "))
-        if not (1 <= columna <= 3):
-            print("La columna debe estar entre 1 y 3.")
+        columna = int(input(f"Introduce la columna (1-{N}): "))
+        fila = int(input(f"Introduce la fila (1-{N}): "))
+        if not (1 <= columna <= N):
+            print(f"La columna debe estar entre 1 y {N}.")
             continue
-        if not (1 <= fila <= 3):
-            print("La fila debe estar entre 1 y 3.")
+        if not (1 <= fila <= N):
+            print(f"La fila debe estar entre 1 y {N}.")
             continue
         if tablero[fila-1][columna-1] != " ":
             print("Esa casilla ya está ocupada. Elige otra.")
@@ -46,45 +46,43 @@ def turnoJugador(ficha):
     return tablero
 
 def turnoMaquina(ficha):
-    # La máquina escoge aleatoriamente una casilla libre para jugar
-    fila= random.randint(0,2)
-    columna= random.randint(0,2)
+    global tablero
+    fila = random.randint(0, N-1)
+    columna = random.randint(0, N-1)
     while tablero[fila][columna] != " ":
-        fila = random.randint(0,2)
-        columna = random.randint(0,2)
+        fila = random.randint(0, N-1)
+        columna = random.randint(0, N-1)
     tablero[fila][columna] = ficha
 
 def comprobarGanador():
-    # Comprueba las filas, columnas y diagonales buscando 3 fichas iguales
-    ganador = None
-    while ganador is None:
-        for i in range(len(tablero)):
-            # Comprobar filas
-            if tablero[i][0] == tablero[i][1] == tablero[i][2] != " ":
-                ganador = tablero[i][0]
-                return ganador
-            # Comprobar columnas
-            if tablero[0][i] == tablero[1][i] == tablero[2][i] != " ":
-                ganador = tablero[0][i]
-                return ganador
-        # Comprobar diagonales
-        if tablero[0][0] == tablero[1][1] == tablero[2][2] != " ":
-            ganador = tablero[0][0]
-            return ganador
-        if tablero[0][2] == tablero[1][1] == tablero[2][0] != " ":
-            ganador = tablero[0][2]
-            return ganador
-        # No hay ganador aún
-        return None
-    
+    # Comprueba filas
+    for i in range(N):
+        if tablero[i][0] != " " and all(tablero[i][j] == tablero[i][0] for j in range(1, N)):
+            return tablero[i][0]
+
+    # Comprueba columnas
+    for j in range(N):
+        if tablero[0][j] != " " and all(tablero[i][j] == tablero[0][j] for i in range(1, N)):
+            return tablero[0][j]
+
+    # Diagonal principal
+    if tablero[0][0] != " " and all(tablero[i][i] == tablero[0][0] for i in range(1, N)):
+        return tablero[0][0]
+
+    # Diagonal secundaria
+    if tablero[0][N-1] != " " and all(tablero[i][N-1-i] == tablero[0][N-1] for i in range(1, N)):
+        return tablero[0][N-1]
+
+    # Si no hay ganador
+    return None
+
 def comprobarEmpate():
-    # Revisa si hay espacios vacíos; si no hay, es empate
-    for i in tablero:
-        for j in i:
-            if j == " ":
+    for fila in tablero:
+        for casilla in fila:
+            if casilla == " ":
                 return False
     return True
-           
+
 def jugadorVSjugador():
     # Controla el modo de juego jugador contra jugador
     reiniciar_tablero()
@@ -168,3 +166,4 @@ def maquinaVSmaquina():
             turno_actual = "O"
         else:
             turno_actual = "X"
+
